@@ -548,6 +548,7 @@
 					endPortion,
 					match
 				);
+				var newNodeLastChild = newNode.lastChild;
 
 				node.parentNode.insertBefore(newNode, node);
 
@@ -569,6 +570,9 @@
 					newNode.parentNode.replaceChild(node, newNode);
 				});
 
+				if (newNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+					return newNodeLastChild;
+				}
 				return newNode;
 
 			} else {
@@ -609,6 +613,7 @@
 					endPortion,
 					match
 				);
+				var lastNodeLastChild = lastNode.lastChild;
 
 				matchStartNode.parentNode.insertBefore(precedingTextNode, matchStartNode);
 				matchStartNode.parentNode.insertBefore(firstNode, matchStartNode);
@@ -625,6 +630,9 @@
 					lastNode.parentNode.replaceChild(matchEndNode, lastNode);
 				});
 
+				if (lastNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+					return lastNodeLastChild;
+				}
 				return lastNode;
 			}
 		}

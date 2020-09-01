@@ -532,3 +532,62 @@ test('>Two portions', function() {
 	});
 	htmlEqual(d.innerHTML, '___0<em>2</em>3<u>4</u>');
 });
+
+module('Document fragments');
+
+test('Custom replacement function returns Element', function() {
+	var d = document.createElement('div');
+	d.innerHTML = '11 22';
+	findAndReplaceDOMText(d, {
+		find: /\d+/g,
+		replace: function(portion) {
+			var fragment = document.createElement('fragment');
+			var m = document.createElement('m');
+
+			m.appendChild(document.createTextNode(portion.text))
+			fragment.appendChild(document.createTextNode('x'));
+			fragment.appendChild(m);
+			fragment.appendChild(document.createTextNode('y'));
+			return fragment;
+		}
+	});
+	htmlEqual(d.innerHTML, '<fragment>x<m>11</m>y</fragment> <fragment>x<m>22</m>y</fragment>');
+});
+
+test('Custom replacement function returns actual DocumentFragment', function() {
+	var d = document.createElement('div');
+	d.innerHTML = '11 22';
+	findAndReplaceDOMText(d, {
+		find: /\d+/g,
+		replace: function(portion) {
+			var fragment = document.createDocumentFragment();
+			var m = document.createElement('m');
+
+			m.appendChild(document.createTextNode(portion.text))
+			fragment.appendChild(document.createTextNode('x'));
+			fragment.appendChild(m);
+			fragment.appendChild(document.createTextNode('y'));
+			return fragment;
+		}
+	});
+	htmlEqual(d.innerHTML, 'x<m>11</m>y x<m>22</m>y');
+});
+
+test('Custom replacement function returns actual DocumentFragment - more complex', function() {
+	var d = document.createElement('div');
+	d.innerHTML = '<u>11 22</u> 3<u>3 44 5</u>5 6<u>6<u>6</u>6</u>6';
+	findAndReplaceDOMText(d, {
+		find: /\d+/g,
+		replace: function(portion) {
+			var fragment = document.createDocumentFragment();
+			var m = document.createElement('m');
+
+			m.appendChild(document.createTextNode(portion.text))
+			fragment.appendChild(document.createTextNode('x'));
+			fragment.appendChild(m);
+			fragment.appendChild(document.createTextNode('y'));
+			return fragment;
+		}
+	});
+	htmlEqual(d.innerHTML, '<u>x<m>11</m>y x<m>22</m>y</u> x<m>3</m>y<u>x<m>3</m>y x<m>44</m>y x<m>5</m>y</u>x<m>5</m>y x<m>6</m>y<u>x<m>6</m>y<u>x<m>6</m>y</u>x<m>6</m>y</u>x<m>6</m>y');
+});

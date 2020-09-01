@@ -119,7 +119,7 @@ A portion object has the following properties:
 
 #### The `replace` Function
 
-If you pass a function to the `replace` option your function will be called on every portion of every match and is expected to return a DOM Node (a Text or Element node). Your function will be passed both the portion and the encapsulating match of that portion.
+If you pass a function to the `replace` option your function will be called on every portion of every match and is expected to return a DOM Node (a Text, Element, or DocumentFragment node). Your function will be passed both the portion and the encapsulating match of that portion.
 
 E.g.
 
